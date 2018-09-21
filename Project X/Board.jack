@@ -1,1 +1,675 @@
-
+class Board {
+	field Array grid;
+	field int score, seed;
+	field int status;						// 0 is begin game, 1 is in game, 2 is lost, 3 is won;
+	field int score1, score2, score3, score4, score5, score6, score7, score8, score9, score10, scorec, scores, scorel, scoree, scoreg, scoreq;
+	
+	static String title;
+	static String strStart, strGameOver, strContinue;
+	static String strWon8, strWon9, strWon10, strWon11, strWon12, strWon13, strWon14, strWon;
+	static String border;
+	static String earned;
+	static String strScore, score1Str, score2Str, score3Str, score4Str, score5Str, score6Str, score7Str, score8Str, score9Str, score10Str, scorecStr, scoresStr, scorelStr, scoreeStr, scoregStr, scoreqStr;
+	static String tiles;
+	static String pressRestart, pressQuit;
+	
+	
+	// Constructor
+	constructor Board new() {
+		var int i;
+		let grid = Array.new(4);			// initialize array of 4
+		let i = 0;
+		while (i < 4) {
+			let grid[i] = Array.new(4);		// initialize each index with array of 4 (make a 4 by 4 grid)
+			let i = i + 1;
+		}
+		do beginBoard();					// set up initial board
+		let seed = 0;
+		return this;
+	}
+	
+	// Set up the initial board
+	method void beginBoard() {
+		var int i, j;
+		var Array table;
+		var int randRow, randCol;
+		let i = 0;
+		while (i < 4) {
+			let j = 0;
+			let table = grid[i];	
+			while (j < 4) {
+				let table[j] = 32;		// fill board with whitespace
+				let j = j + 1;
+			}
+			let i = i + 1;
+		}
+		
+		let randRow = Random.between(0, 4);
+		let randCol = Random.between(0, 4);
+		
+		let table = grid[randRow];
+		let table[randCol] = 49;		// first tile is ASCII for '1'
+		
+		let score = 0;
+		let score1 = 1;
+		let score2 = 0;
+		let score3 = 0;
+		let score4 = 0;
+		let score5 = 0;
+		let score6 = 0;
+		let score7 = 0;
+		let score8 = 0;
+		let score9 = 0;
+		let scorec = 0;
+		let scores = 0;
+		let scoreg = 0;
+		let scoree = 0;
+		let scorel = 0;
+		let scoreq = 0;
+		
+		let status = 0;					// begin game
+		return;
+	}
+	
+	// Add new tile
+	method void newTile(){
+		var Array table;
+		var int row, col;
+		var int oddeven, newTile;
+		
+		if (~(status = 1)) {
+			return;
+		}
+		
+		// random number generator #2
+		let seed = seed * 25173 + 13849;
+		if (seed < 0) {
+			let seed = - seed;
+		}
+		
+		if (seed - (seed / 2 * 2) = 0) {
+			let oddeven = 1;
+		}
+		else {
+			let oddeven = -1;
+		}
+		
+		let seed = seed - (seed / 16 * 16);
+		let row = seed / 4;
+		let col = seed - (4 * row);
+		let table = grid[row];
+		
+		let newTile = 49;				// new tile is '1'
+		
+		while (table[col] > 48){
+			let seed = seed + oddeven;
+			if (seed < 0) {
+				let seed = 15;
+			}
+			let seed = seed - (seed / 16 * 16);
+			let row = seed / 4;
+			let col = seed - (4 * row);
+			let table = grid[row];
+			let newTile = 99 - newTile;	// new tile is '2'
+		}
+		let table[col] = newTile;		// inserts the new tile at new location
+		
+		if (table[col] = 49) {
+			let score1 = score1 + 1;
+		}
+		if (table[col] = 50) {
+			let score2 = score2 + 1;
+		}
+		
+		return;
+	}
+	
+	method void updateScore(int temp) {
+		if (temp = 50) {
+			let score2 = score2 + 1;
+		}
+		if (temp = 51) {
+			let score3 = score3 + 1;
+		}
+		if (temp = 52) {
+			let score4 = score4 + 1;
+		}
+		if (temp = 53) {
+			let score5 = score5 + 1;
+		}
+		if (temp = 54) {
+			let score6 = score6 + 1;
+		}
+		if (temp = 55) {
+			let score7 = score7 + 1;
+		}
+		if (temp = 56) {
+			let score8 = score8 + 1;
+		}
+		if (temp = 57) {
+			let score9 = score9 + 1;
+		}
+		if (temp = 58) {
+			let scorec = scorec + 1;
+		}
+		if (temp = 59) {
+			let scores = scores + 1;
+		}
+		if (temp = 60) {
+			let scorel = scorel + 1;
+		}
+		if (temp = 61) {
+			let scoree = scoree + 1;
+		}
+		if (temp = 62) {
+			let scoreg = scoreg + 1;
+		}
+		if (temp = 63) {
+			let scoreq = scoreq + 1;
+		}
+		
+		return;
+	}
+	
+	// Shift all tiles in direction specified
+	method void allMove(Array arr, boolean moveLeft){
+		var int i, j;
+		let i = 0;
+		let j = 0;
+		if (moveLeft) {
+			// move left
+			while (i < 4) {
+				if (arr[i] > 48) {
+					let arr[j] = arr[i];
+					let j = j + 1;
+				}
+				let i = i + 1;
+			}
+			while (j < 4) {
+				let arr[j] = 32;		// clean up array
+				let j = j + 1;
+			}
+		}
+		else {
+			// move right
+			while (i < 4) {
+				if (arr[3 - i] > 48) {
+					let arr[3 - j] = arr[3 - i];
+					let j = j + 1;
+				}
+				let i = i + 1;
+			}
+			while (j < 4) {
+				let arr[3 - j] = 32;	// clean up array
+				let j = j + 1;
+			}
+		}
+		return;
+	}
+	
+	// Merge same tiles if touching after pushed
+	method void merge(Array arr, boolean moveLeft){
+		if ((arr[0] = arr[1]) & (arr[2] = arr[3]) & (arr[0] > 48) & (arr[2] > 48)) {
+			
+			do updateScore(arr[0] + 1);
+			do updateScore(arr[2] + 1);
+			
+			if (moveLeft) {
+				let arr[0] = arr[0] + 1;
+				let arr[1] = arr[2] + 1; 
+				let arr[2] = 32;		// clean up array
+				let arr[3] = 32;		// clean up array
+			}
+			else {
+				let arr[3] = arr[3] + 1;
+				let arr[2] = arr[1] + 1;
+				let arr[1] = 32;		// clean up array
+				let arr[0] = 32;		// clean up array
+			}
+			return;
+		}
+		
+		if ((arr[0] = arr[1]) & (arr[0] > 48)) {
+			
+			do updateScore(arr[0] + 1);
+			
+			if (moveLeft) {
+				let arr[0] = arr[0] + 1;
+				let arr[1] = arr[2];
+				let arr[2] = arr[3];
+				let arr[3] = 32;		// clean up array
+			}
+			else {
+				let arr[1] = arr[1] + 1;
+				let arr[0] = 32;		// clean up array
+			}
+			return;
+		}
+		
+		if ((arr[1] = arr[2]) & (arr[1] > 48)) {
+			
+			do updateScore(arr[1] + 1);
+			
+			if (moveLeft) {
+				let arr[1] = arr[1] + 1;
+				let arr[2] = arr[3];
+				let arr[3] = 32;		// clean up array
+            }
+			else {
+				let arr[2] = arr[2] + 1;
+				let arr[1] = arr[0];
+				let arr[0] = 32;		// clean up array
+			}
+			return;
+		}
+		
+		if ((arr[2] = arr[3]) & (arr[2] > 48)) {
+			
+			do updateScore(arr[2] + 1);
+			
+			if (moveLeft) {
+				let arr[2] = arr[2] + 1;
+				let arr[3] = 32;		// clean up array
+			}
+			else {
+				let arr[3] = arr[3] + 1;
+				let arr[2] = arr[1];
+				let arr[1] = arr[0];
+				let arr[0] = 32;		// clean up array
+			}
+			return;
+		}
+		return;
+	}
+	
+	method void transpose() {
+		do swap(0, 1);
+		do swap(0, 2);
+		do swap(0, 3);
+		do swap(1, 2);
+		do swap(1, 3);
+		do swap(2, 3);
+		return;
+	}
+	method void swap(int i, int j){
+		var int temp;
+		var Array side1, side2;
+		let side1 = grid[i];
+		let side2 = grid[j];
+		let temp = side1[j];
+		let side1[j] = side2[i];
+		let side2[i] = temp;
+		return;
+	}
+	
+	// Move and merge tiles according to key pressed
+	method void updateBoard(char direction){
+		var boolean isUpDown, moveLeft;
+		var int i;
+		
+		// Transposition Logic for Left, Up, Right, Down
+		// 0 left	isUpDown = false	moveLeft = true
+		// 1 up		isUpDown = true		moveLeft = true
+		// 2 right	isUpDown = false	moveLeft = false
+		// 3 down	isUpDown = true		moveLeft = false
+		
+		if ((direction = 0) | (direction = 2)) {
+			let isUpDown = false;
+		}
+		else {
+			let isUpDown = true;
+		}
+		
+		if ((direction = 0) | (direction = 1)) {
+			let moveLeft = true;
+        }
+		else {
+			let moveLeft = false;
+		}
+		
+		if (isUpDown) {
+			do transpose();		// if transpose, then convert (left -> up, right -> down)
+		}
+		
+		let i = 0;
+		while (i < 4) {
+			do allMove(grid[i], moveLeft);
+			do merge(grid[i], moveLeft);
+			let i = i + 1;
+		}
+		
+		if (isUpDown) {
+			do transpose();		// transpose back!
+		}
+		
+		return;
+	}
+	
+	// Next turn
+	method void next(int direction) {
+		do updateBoard(direction);
+		do changeStatus();
+		return;
+	}
+	
+	method void setStatus(int x){
+		let status = x;
+		return;
+	}
+	method int getStatus(){
+		return status;
+	}
+	method void changeStatus(){        
+		var int i, j;
+		var Array row;
+		let i = 0;
+		while (i < 4) {
+			let row = grid[i];
+			let j = 0;
+			while (j < 4) {
+				if (row[j] = 56 | row[j] = 57 | row[j] = 58 | row[j] = 59 | row[j] = 60 | row[j] = 61 | row[j] = 62 | row[j] = 63) {
+					let status = 3;
+					return;
+				}
+				if (row[j] = 32) {
+					let status = 1;
+					return;
+				}
+				let j = j + 1;
+			}
+			let i = i + 1;
+		}
+		let status = 2;
+		return;
+	}
+	
+	function void text() {
+		// count characters for screen position
+		let title = "TILE???";
+		let strStart = "Press any key to start a new game";
+		let strGameOver = "Game over... :(";
+		let strContinue = "Press any to continue...";
+		
+		let strScore = "Score: ";
+		
+		let strWon8 = "Nice! You got the 8th tile! ^_^";
+		let strWon9 = "Nice! You got the 9th tile! ^_^";
+		let strWon10 = "Excellent! You got the : colonth tile!";
+		let strWon11 = "Excellent! You got the ; semicolonth tile!";
+		let strWon12 = "Impressive! You got the < less imperfect tile :o";
+		let strWon13 = "Impressive! You got the = equality tile =)";
+		let strWon14 = "Impressive! You got the > greater tile o:";
+		let strWon = "You finished the game! You got the tile?";
+		
+		let border = "+-----+-----+-----+-----+";
+		
+		let earned = "Tiles earned";
+		
+		let score1Str = "1 --- ";
+		let score2Str = "2 --- ";
+		let score3Str = "3 --- ";
+		let score4Str = "4 --- ";
+		let score5Str = "5 --- ";
+		let score6Str = "6 --- ";
+		let score7Str = "7 --- ";
+		let score8Str = "8 --- ";
+		let score9Str = "9 --- ";
+		let scorecStr = ": --- ";
+		let scoresStr = "; --- ";
+		let scorelStr = "< --- ";
+		let scoreeStr = "= --- ";
+		let scoregStr = "> --- ";
+		let scoreqStr = "? --- ";
+		
+		let tiles = " tiles";
+		
+		let pressRestart = "Press 'R' to restart!";
+		let pressQuit = "Press 'Q' to quit game.";
+		
+		return;
+	}
+	
+	// Display text, the grid, tiles, the score, and text
+	method void drawGrid(){
+		var int row, col, drawCount, spaceCount;
+		var int i, j, max;
+		var Array table, temp;
+		
+		let row = 0;
+		let col = 0;
+		
+		// Find highest tile earned
+		let i = 0;
+		let max = 0;
+		while (i < 4) {
+			let temp = grid[i];
+			let j = 0;
+			while (j < 4) {
+				if (temp[j] > max) {
+					let max = temp[j];
+				}
+				let j = j + 1;
+			}
+			let i = i + 1;
+		}
+		
+		// Score multiplier
+		let score = score1 + (2 * score2) + (3 * score3) + (4 * score4) + (5 * score5) + (6 * score6) + (7 * score7) + (8 * score8) + (9 * score9) + (10 * scorec) + (11 * scores) + (12 * scorel) + (13 * scoree) + (14 * scoreg) + (15 * scoreq);
+		
+		if (status = 0) {
+			// begin game
+			do Output.moveCursor(row + 10, col + 29);
+			do Output.printString("Tile?");
+			do Output.moveCursor(row + 12, col + 15);
+			do Output.printString(strStart);
+		}
+		else {
+			if (status = 2) {
+				// game lost
+				do Output.moveCursor(row + 10, col + 27);
+				do Output.printString(strScore);
+				do Output.printInt(score);
+				
+				do Output.moveCursor(row + 12, col + 24);
+				do Output.printString(strGameOver);
+				do Output.moveCursor(row + 14, col + 20);
+				do Output.printString(strContinue);
+			}
+			else {
+				if (status = 3) {
+					// game won
+					do Output.moveCursor(row + 10, col + 13);
+					if (max = 56) {
+						do Output.printString(strWon8);
+					}
+					if (max = 57) {
+						do Output.printString(strWon9);
+					}
+					if (max = 58) {
+						do Output.printString(strWon10);
+					}
+					if (max = 59) {
+						do Output.printString(strWon11);
+					}
+					if (max = 60) {
+						do Output.printString(strWon12);
+					}
+					if (max = 61) {
+						do Output.printString(strWon13);
+					}
+					if (max = 62) {
+						do Output.printString(strWon14);
+					}
+					if (max = 63) {
+						do Output.printString(strWon);
+					}
+					
+					do Output.moveCursor(row + 12, col + 27);
+					do Output.printString(strScore);
+					do Output.printInt(score);
+					
+					do Output.moveCursor(row + 14, col + 20);
+					do Output.printString(strContinue);
+				}
+				else {
+					// game is still running, display the game board
+					do Output.moveCursor(row + 1, col + 15);
+					do Output.printString(title);
+					
+					do Output.moveCursor(row + 3, col + 6);
+					do Output.printString(border);		// top border
+					
+					do Output.moveCursor(row + 19, col + 6);
+					do Output.printString(border);		// bottom border
+					
+					let i = 0;
+					while (i < 4) {
+						let j = 0;
+						let table = grid[i];
+						do Output.moveCursor(row + (4 * i) + 4, col + 6);
+						do Output.printChar(124);		// ASCII '|' = 2124
+						let drawCount = 0;
+						while (drawCount < 4) {
+							let spaceCount = 0;
+							while (spaceCount < 5) {
+								do Output.printChar(32);
+								let spaceCount = spaceCount + 1;
+							}
+							do Output.printChar(124);
+							let drawCount = drawCount + 1;
+						}
+						do Output.moveCursor(row + (4 * i) + 5, col + 6);
+						do Output.printChar(124);
+						while (j < 4) {
+							do Output.printChar(32);
+							do Output.printChar(32);
+							do Output.printChar(table[j]);
+							do Output.printChar(32);
+							do Output.printChar(32);
+							do Output.printChar(124);
+							let j = j + 1;
+						}
+						do Output.moveCursor(row + (4 * i) + 6, col + 6);
+						do Output.printChar(124);
+						let drawCount = 0;
+						while (drawCount < 4) {
+							let spaceCount = 0;
+							while (spaceCount < 5) {
+								do Output.printChar(32);
+								let spaceCount = spaceCount + 1;
+							}
+							do Output.printChar(124);
+							let drawCount = drawCount + 1;
+						}
+						do Output.moveCursor(row + (4 * i) + 7, col + 6);
+						do Output.printString(border);
+						let i = i + 1;
+					}
+					do displayScores();
+				}
+			}
+		}
+		return;
+	}
+	
+	method void displayScores() {
+		// display score
+		var int row, col;
+		let row = 0;
+		let col = 0;
+		do Output.moveCursor(row + 21, col + 13);
+		do Output.printString(strScore);
+		do Output.printInt(score);
+		
+		do Output.moveCursor(row + 2, col + 36);
+		do Output.printString(earned);
+		
+		do Output.moveCursor(row + 4, col + 39);
+		do Output.printString(score1Str);
+		do Output.printInt(score1);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 5, col + 39);
+		do Output.printString(score2Str);
+		do Output.printInt(score2);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 6, col + 39);
+		do Output.printString(score3Str);
+		do Output.printInt(score3);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 7, col + 39);
+		do Output.printString(score4Str);
+		do Output.printInt(score4);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 8, col + 39);
+		do Output.printString(score5Str);
+		do Output.printInt(score5);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 9, col + 39);
+		do Output.printString(score6Str);
+		do Output.printInt(score6);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 10, col + 39);
+		do Output.printString(score7Str);
+		do Output.printInt(score7);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 11, col + 39);
+		do Output.printString(score8Str);
+		do Output.printInt(score8);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 12, col + 39);
+		do Output.printString(score9Str);
+		do Output.printInt(score9);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 13, col + 39);
+		do Output.printString(scorecStr);
+		do Output.printInt(scorec);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 14, col + 39);
+		do Output.printString(scoresStr);
+		do Output.printInt(scores);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 15, col + 39);
+		do Output.printString(scorelStr);
+		do Output.printInt(scorel);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 16, col + 39);
+		do Output.printString(scoreeStr);
+		do Output.printInt(scoree);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 17, col + 39);
+		do Output.printString(scoregStr);
+		do Output.printInt(scoreg);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 18, col + 39);
+		do Output.printString(scoreqStr);
+		do Output.printInt(scoreq);
+		do Output.printString(tiles);
+		
+		do Output.moveCursor(row + 20, col + 36);
+		do Output.printString(pressRestart);
+		do Output.moveCursor(row + 21, col + 36);
+		do Output.printString(pressQuit);
+		
+		return;
+	}
+	
+	// Clear memory
+	method void dispose() {
+		do Memory.deAlloc(this);
+		return;
+	}
+}

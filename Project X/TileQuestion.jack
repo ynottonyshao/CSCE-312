@@ -1,0 +1,77 @@
+class TileQuestion{
+	field Board board;
+		
+	// Constructor
+	constructor TileQuestion new() {
+		let board = Board.new();
+		do board.drawGrid();
+		return this;
+    }
+	
+	// Clear memory
+	method void dispose() {
+		do board.dispose();
+		do Memory.deAlloc(this);
+		return;
+	}
+	
+	method void run() {
+		var int key, key2, status;
+		var boolean quit;
+		let quit = false;
+		while (~quit) {
+			let status = board.getStatus();
+			let key = 0;
+			while (key = 0) {
+				let key = Keyboard.keyPressed();
+			}
+			let key2 = key;
+			while (~(key2 = 0)) {
+				let key2 = Keyboard.keyPressed();
+			}
+			if (key = 81) {
+				// press 'Q' to quit
+				let quit = true;
+			}
+			else {
+				if ((status = 0)) {
+					do Screen.clearScreen();
+					do board.setStatus(1);
+					do board.newTile();
+					do board.drawGrid();
+				}
+				else {
+					if ((status = 2) | (status = 3)) {
+						// new game after losing or winning
+						do Screen.clearScreen();
+						do board.setStatus(0);
+						do board.drawGrid();
+						do board.beginBoard();
+					}
+					else {
+						if (key = 82) {
+							// press 'R' to reset
+							do Screen.clearScreen();
+							do board.beginBoard();
+							do board.drawGrid();
+						}
+						else {
+							if ((key > 129) & (key < 134)) {
+								do Screen.clearScreen();
+								// ASCII left arrow	= 130
+								// ASCII up arrow	= 131
+								// ASCII right arrow= 132
+								// ASCII down arrow	= 133
+								do board.next(key - 130);
+								do board.drawGrid();
+								do board.newTile();
+								do board.drawGrid();
+							}
+						}
+					}
+				}
+			}
+        }
+        return;
+    }
+}

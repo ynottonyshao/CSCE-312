@@ -1,0 +1,33 @@
+class Random {
+	static int x;
+	
+	// Sets a new seed value every time the Function class is called
+	function void seed(int seed) {
+		let x = seed;
+		return;
+	}
+	
+	// Returns a mod b
+	function int mod(int a, int b) {
+		if (a < 0) {
+			let a = -a;
+		}
+		while ((a + 1) > b) {
+			let a = a - b;
+		}
+		return a;
+	}
+	
+	// Returns the next random number that can be either negative or positive
+	function int next() {
+		let x = (25173 * x) + 13849;
+		return x;
+	}
+	
+	// Returns a random value between x (inclusive) and y (exclusive) where y > x
+	function int between(int x, int y) {
+		var int diff;
+		let diff = y - x;
+		return Random.mod(Random.next(), diff) + x;
+	}
+}

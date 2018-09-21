@@ -1,0 +1,19 @@
+// Tile? written in Jack Language
+class Main {
+	function void main() {
+		// Create game variable
+		var TileQuestion game;
+		
+		// Set up text variables
+		do Board.text();
+		
+		// Create new game
+		let game = TileQuestion.new();
+		do game.run();
+		
+		// Clear memory
+		do game.dispose();
+		
+		return;
+	}
+}
