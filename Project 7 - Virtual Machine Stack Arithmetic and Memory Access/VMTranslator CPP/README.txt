@@ -1,7 +1,6 @@
 Project 7 - Virtual Machine Translator
 
 Anthony Shao
-UIN: 725004846
 CSCE 312-505
 
 The .vm files must be in the same directory as
