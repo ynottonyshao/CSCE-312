@@ -1,7 +1,6 @@
 Project 6 - Assembly
 
 Anthony Shao
-UIN: 725004846
 CSCE 312-505
 
 The .asm files must be in the same directory as
